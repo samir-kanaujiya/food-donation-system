@@ -147,10 +147,11 @@ if (isset($_GET['donation'])) {
                                 <a class="nav-link" href="index.php"><i class="fa fa-fw fa-tachometer-alt"></i>Dashboard <span class="badge badge-success">6</span></a>
                             </li>
                               <li class="nav-item ">
-                                <a class="nav-link" href="request.php" style="background-color: #b6991786;"><i class="fa fa-fw fa-hand-holding-heart"></i>My Request <span class="badge badge-success">6</span></a>
+                                <a class="nav-link" href="request.php" ><i class="fa fa-fw fa-hand-holding-heart"></i>My Request <span class="badge badge-success">6</span></a>
                             </li>
+                           
                             <li class="nav-item ">
-                                <a class="nav-link" href="review.php" ><i class="fa fa-fw fa-hand-holding-heart"></i>Review <span class="badge badge-success">6</span></a>
+                                <a class="nav-link" href="review.php" style="background-color: #b6991786;"><i class="fa fa-fw fa-hand-holding-heart"></i>Review <span class="badge badge-success">6</span></a>
                             </li>
                             <li class="nav-item ">
                                 <a class="nav-link" href="add.php"><i class="fa fa-fw fa-hands-helping"></i>Request Assistance <span class="badge badge-success">6</span></a>
@@ -197,17 +198,7 @@ if (isset($_GET['donation'])) {
                         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                             <div class="card">
                                 <h5 class="card-header">Request Information </h5>
-                                   <form class="uploaddate" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?> " method="post">
-                                    <label for="sorted">Sort by: </label>
-                                    <select  name="sorted" id="sorted">
-                                        <option  <?php if (filter_input(INPUT_POST, 'sorted', FILTER_SANITIZE_STRING) == 'upload') { ?>selected="true" <?php }; ?>value="upload">Uploaded Date</option>
-                                        <option <?php if (filter_input(INPUT_POST, 'sorted', FILTER_SANITIZE_STRING) == 'expiry') { ?>selected="true" <?php }; ?>value="expiry">Expiry Date</option>
-                                        
-                                        <option <?php if (filter_input(INPUT_POST, 'sorted', FILTER_SANITIZE_STRING) == 'rate') { ?>selected="true" <?php }; ?> value="rate">Ratings of Donor</option>
-                                        
-                                    </select>
-                                    <input type="submit" value="Go">
-                                    </form> 
+                                  
                                     
 
                                 <!-- <div class="dropdown">
@@ -234,23 +225,8 @@ if (isset($_GET['donation'])) {
                             //echo $sort_value;
                                             
 
-                                            if($sort_value=="expiry")
-                                            {
-                                                $sql = "SELECT * FROM donations WHERE delivery_status=0 AND (status=0 OR acceptor_name='$username') ORDER BY best_before";
-                                            }
-                                            else if($sort_value=="rate")
-                                            {
-                                                $sql = " SELECT DISTINCT d.*,r.rating FROM donations d INNER JOIN (SELECT *,avg(user_rating) rating FROM review_table GROUP BY donor_name)r ON d.username=r.donor_name WHERE d.delivery_status=0 AND (d.status=0 OR d.acceptor_name='$username') ORDER BY r.rating DESC";
-                                            }
-                                            else if($sort_value=="upload")
-                                            {
-                                                $sql = "SELECT * FROM donations WHERE delivery_status=0 AND (status=0 OR acceptor_name='$username') ORDER BY id";
-                                            }
-                                           else
-                                           {
-                                            $sql = "SELECT * FROM donations WHERE delivery_status=0 AND (status=0 OR acceptor_name='$username') order by id";
-                                           }
-                                         
+                                            $sql = "SELECT * FROM donations WHERE delivery_status=0 and acceptor_name='$username' order by id;";
+                                        
                                             $sql_query = mysqli_query($con, $sql);
                                             while ($row = mysqli_fetch_assoc($sql_query)) {
                                                 
@@ -267,7 +243,7 @@ if (isset($_GET['donation'])) {
                                                 $text = "Expired";
                                                 $accept_date = $row['accept_date'];
                                                 //rating
-                                                $sql1="SELECT avg(user_rating) FROM review_table WHERE donor_name='$username' GROUP BY donor_name  ";
+                                                $sql1="SELECT avg(user_rating) FROM review_table WHERE donor_name='$username' GROUP BY donor_name";
                                                 $sql1_query=mysqli_query($con,$sql1);
                                                 $row1= mysqli_fetch_assoc($sql1_query);
                                                 // print_r($con);
@@ -293,41 +269,28 @@ if (isset($_GET['donation'])) {
                                                     $value = "bg-success";
                                                     $text="Received";
                                                 }
-                                                if($avg_round<2){
-                                                    $msg="Bad Review";
-                                                    $color="red";
-                                                }
-                                                elseif ($avg_round<4) {
-                                                    $msg="Average Review";
-                                                    $color="orange";
-                                                }
-                                                else  {
-                                                    $msg="Best Review";
-                                                    $color="green";
-                                                }
+                                              
                                               
                                      
                                    echo ('
-                                   <form action="donation_accepted.phpid='.$id.'"  method="post" style="margin-left 0px !important;">
                                    <div class="card zoom " style="width: 18rem; margin-top:20px; border-radius:15px; ">
                                    
                                    
                                    <div style="height:175px; overflow:hidden;"> <a href="../donor/donation_img/'.$img_path.'" class="bg-image hover-zoom"><img class=" card-img-top hover-zoom" src="../donor/donation_img/'.$img_path.'" alt="Card image cap" style="border-top-left-radius:15px; border-top-right-radius:15px;  ">
                                    </a></div>
-                                    
-                                                <div class="card-body">
-                                                    <h5 class="card-title">'.$title. '</h5> 
-                                                    <a href="viewprofile.php?username='.$username.'" class="card-link" style="pointer:cursor;">'.$username.'</a>
-                                                    
-                                                    
-                                                        <b style="color: #2919ff; margin-left: 20px;"><span id="average_rating" >'.$avg_round.'</span> / 5
-                                                        </b>
-                                                        <br/>
-                                                        <p style="color:white;background: '.$color.';
-                                                        padding: 10px;
-                                                        border-radius: 10px;
-                                                        margin-top: 10px;"> '.$msg.'</p>
-                                                
+                                   
+                                   <div class="card-body">
+                                   <h5 class="card-title">'.$title. '</h5> 
+                                   <a href="viewprofile.php?username='.$username.'" class="card-link" style="pointer:cursor;">'.$username.'</a>
+                                   
+                                   
+                                   <b style="color: #2919ff; margin-left: 20px;"><span id="average_rating" >'.$avg_round.'</span> / 5</b>
+                                  
+                                   <br/>
+                                                <form action="reviewsubmit.php?donor='.$username.'"  method="post" style="margin-left 0px !important;">
+                                                   <input type="number" name="rating" min="0" max="5" style="width:100px"/>
+                                                    <button type="submit"  style="width:100px; height:30px">Rate</button>
+                                                </form>
                                                     
                                                 </div>
                                                
@@ -355,7 +318,6 @@ if (isset($_GET['donation'])) {
                                                 }
                                                 echo'</div>    
                                                 </div>
-                                                </form>
                                 '; } ?> 
                                
                                 </div>

@@ -114,6 +114,10 @@ $image = $res['profile_pic'];
                                 <a class="nav-link" href="request.php"><i class="fa fa-fw fa-hand-holding-heart"></i>My Request <span class="badge badge-success">6</span></a>
                             </li>
                             <li class="nav-item ">
+                                <a class="nav-link" href="review.php"><i class="fa fa-fw fa-hand-holding-heart"></i>Review <span class="badge badge-success">6</span></a>
+                            </li>
+                           
+                            <li class="nav-item ">
                                 <a class="nav-link" href="add.php"><i class="fa fa-fw fa-hands-helping"></i>Request Assistance <span class="badge badge-success">6</span></a>
                             </li>
                             <li class="nav-item ">

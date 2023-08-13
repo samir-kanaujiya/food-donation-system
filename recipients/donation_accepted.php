@@ -44,9 +44,6 @@ function sendemail($a_name,$d_name, $address, $contact, $a_email,$d_email,$type)
         )
     );
 
-   
-
-
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
     $mail->Username = 'foodfullynepal12@gmail.com';
